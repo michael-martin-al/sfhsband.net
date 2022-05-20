@@ -1,4 +1,17 @@
 ---
 title: Resources/Forms
 ---
-Resources  and Forms
+### For Students
+
+wemea_scholarship_form_2021.pdf\
+Download File
+
+sfhs_band_lettering_chart_2021.xlsx\
+Download File
+
+handbook_2021.pdf\
+Download File
+
+### For Parents
+
+### Links
