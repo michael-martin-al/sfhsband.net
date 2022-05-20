@@ -133,6 +133,18 @@ collections:
             }
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Body", name: "body", widget: "markdown" }
+      - file: "src/pages/resourcesforms/index.md"
+        label: "Resources"
+        name: "resources"
+        fields:
+          - {
+              label: "Template Key",
+              name: "templateKey",
+              widget: "hidden",
+              default: "resources-forms-page",
+            }
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Body", name: "body", widget: "markdown" }
       - file: "src/pages/products/index.md"
         label: "Products Page"
         name: "products"
