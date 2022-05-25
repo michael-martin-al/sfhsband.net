@@ -1,27 +1,23 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import PreviewCompatibleImage from "../components/PreviewCompatibleImage";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import Box from "@mui/material/Box";
 
 const FeatureGrid = ({ gridItems }) => (
-  <div className="columns is-multiline">
+  <Grid container spacing={4}>
     {gridItems.map((item) => (
-      <div key={item.text} className="column is-6">
-        <section className="section">
-          <div className="has-text-centered">
-            <div
-              style={{
-                width: "240px",
-                display: "inline-block",
-              }}
-            >
-              <PreviewCompatibleImage imageInfo={item} />
-            </div>
-          </div>
+      <Grid item key={item.text} xs={12} sm={6}>
+        <Box padding={4}>
+          <center>
+            <PreviewCompatibleImage imageInfo={item} />
+          </center>
           <p>{item.text}</p>
-        </section>
-      </div>
+        </Box>
+      </Grid>
     ))}
-  </div>
+  </Grid>
 );
 
 FeatureGrid.propTypes = {
