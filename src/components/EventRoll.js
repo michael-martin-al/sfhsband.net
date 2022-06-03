@@ -9,70 +9,34 @@ import {
   CardContent,
   CardActions,
   Button,
-  Avatar,
-  IconButton,
   Typography,
-  Collapse,
-  Box,
   Container,
-  Divider
 } from '@mui/material'
-import { red } from '@mui/material/colors'
-import {
-  Menu as MenuIcon,
-  MoreVert as MoreVertIcon,
-  Favorite as FavoriteIcon,
-  Share as ShareIcon,
-  ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon
-} from '@mui/icons-material'
+import { ReadMore as ReadMoreIcon } from '@mui/icons-material'
+import heroImage from "../img/hero.jpg"
+import EventCard from "./EventCard"
 
-function ExpandMore() {
-  return <React.Fragment />
-}
-
-function FeaturedCard({ title, date, excerpt, slug }) {
-  return (
-    <Box paddingBottom={4}>
-      <Container component="section" maxWidth="md">
-        <Box paddingBottom={4}>
-          <Typography variant="h3">{title}</Typography>
-          <Typography variant="subtitle2" paragraph>{date}</Typography>
-          <Typography variant="body1">{excerpt}</Typography>
-          <Box textAlign="center" paddingTop={4}>
-            <Button variant="contained" component={Link} to={slug} size="large">Continue reading</Button>
-          </Box>
-        </Box>
-      </Container>
-      <Divider />
-    </Box>
-  )
-}
-
-function EventCard({ isFeatured, title, date, excerpt, slug }) {
-  const [expanded, setExpanded] = React.useState(false)
-
-  const handleExpandClick = () => {
-    setExpanded(true)
-  }
-
-  return (
-    <Card style={{ height: "100%" }}>
-      <CardHeader
-        title={title}
-        subheader={date}
-      />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {excerpt}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <Button component={Link} to={slug} size="small">Read More</Button>
-      </CardActions>
-    </Card>
-  )
-}
+const FeaturedCard = ({ title, date, excerpt, slug }) => (
+  <Card sx={{ height: 600 }}>
+    <CardHeader
+      title={<Typography variant="h4" fontWeight={700}>{title}</Typography>}
+      subheader={date}
+    />
+    <CardMedia
+      component="img"
+      height="194"
+      image={heroImage}
+    />
+    <CardContent>
+      <Typography variant="body2" color="text.secondary">
+        {excerpt}
+      </Typography>
+    </CardContent>
+    <CardActions disableSpacing>
+      <Button component={Link} to={slug} variant="outlined" size="medium" endIcon={<ReadMoreIcon />}>Read More</Button>
+    </CardActions>
+  </Card>
+)
 
 class EventRollTemplate extends React.Component {
   render() {
@@ -81,19 +45,25 @@ class EventRollTemplate extends React.Component {
 
     return (
       <>
-        {posts?.filter(({ node: post }) => post.frontmatter.featuredpost)?.map(({ node: post }) => (
-          <FeaturedCard
-            title={post.frontmatter.title}
-            date={post.frontmatter.date}
-            excerpt={post.excerpt}
-            slug={post.fields.slug}
-          />
-        ))}
-
-        <Container component="section">
+        {/* <Container component="section">
           <Grid container spacing={4} alignItems="stretch">
-            {posts?.filter(({ node: post }) => !post.frontmatter.featuredpost)?.map(({ node: post }) => (
+            {posts?.filter(({ node: post }) => post.frontmatter.featuredpost)?.map(({ node: post }) => (
               <Grid item xs={12} sm={6} key={post.id}>
+                <FeaturedCard
+                  title={post.frontmatter.title}
+                  date={post.frontmatter.date}
+                  excerpt={post.excerpt}
+                  slug={post.fields.slug}
+                />
+              </Grid>
+            ))}
+          </Grid >
+        </Container> */}
+
+        <Container component="section" sx={{ paddingTop: 4 }}>
+          <Grid container spacing={4} alignItems="stretch">
+            {posts.map(({ node: post }) => (
+              <Grid item xs={12} sm={4} key={post.id}>
                 <EventCard
                   title={post.frontmatter.title}
                   date={post.frontmatter.date}
@@ -139,7 +109,6 @@ export default function EventRoll() {
                   title
                   templateKey
                   date(formatString: "MMMM DD, YYYY")
-                  featuredpost
                 }
               }
             }

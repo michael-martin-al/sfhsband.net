@@ -2,7 +2,6 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import PreviewCompatibleImage from "../components/PreviewCompatibleImage";
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 
 const FeatureGrid = ({ gridItems }) => (

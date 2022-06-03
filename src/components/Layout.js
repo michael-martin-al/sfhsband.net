@@ -5,7 +5,6 @@ import Navbar from "../components/Navbar";
 import useSiteMetadata from "./SiteMetadata";
 import { withPrefix } from "gatsby";
 import CssBaseline from '@mui/material/CssBaseline';
-import Container from '@mui/material/Container';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';

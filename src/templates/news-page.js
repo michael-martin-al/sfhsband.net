@@ -5,17 +5,15 @@ import { graphql } from "gatsby";
 import Layout from "../components/Layout";
 import Content, { HTMLContent } from "../components/Content";
 import { Container, Grid, Typography } from "@mui/material"
-import NewsCard from "../components/NewsCard"
+import EventCard from "../components/EventCard";
 
 // eslint-disable-next-line
-export const EventPageTemplate = ({
+export const NewsPageTemplate = ({
   content,
   contentComponent,
-  description,
   title,
   helmet,
-  date,
-  news
+  event
 }) => {
   const PageContent = contentComponent || Content;
 
@@ -25,18 +23,14 @@ export const EventPageTemplate = ({
       <Container component="section" sx={{ paddingTop: 4, paddingBottom: 4 }}>
         <Grid container spacing={3}>
           <Grid item md={9} sm={12}>
-            <Typography variant="h2" component="h1" >
+            <Typography variant="h3" component="h1" >
               {title}
             </Typography>
-            <Typography variant="overline">{date}</Typography>
-            <Typography variant="overline">{description}</Typography>
             <PageContent content={content} />
           </Grid>
           <Grid item md={3} sm={12}>
             <Typography>Sidebar</Typography>
-            {news.map(news => (
-              <NewsCard {...news} />
-            ))}
+            <EventCard {...event} />
           </Grid>
         </Grid>
       </Container>
@@ -44,56 +38,54 @@ export const EventPageTemplate = ({
   );
 };
 
-EventPageTemplate.propTypes = {
+NewsPageTemplate.propTypes = {
   content: PropTypes.node.isRequired,
   contentComponent: PropTypes.func,
-  description: PropTypes.string,
   title: PropTypes.string,
   helmet: PropTypes.object,
 };
 
-const EventPage = ({ data, pageContext }) => {
+const NewsPage = ({ data, pageContext }) => {
   const { markdownRemark: page } = data;
 
   return (
     <Layout>
-      <EventPageTemplate
+      <NewsPageTemplate
         content={page.html}
         contentComponent={HTMLContent}
-        description={page.frontmatter.description}
         helmet={
-          <Helmet titleTemplate="%s | Event">
+          <Helmet titleTemplate="%s | News">
             <title>{`${page.frontmatter.title}`}</title>
             <meta
               name="description"
-              content={`${page.frontmatter.description}`}
+              content={`${page.frontmatter.body}`}
             />
           </Helmet>
         }
         title={page.frontmatter.title}
-        news={pageContext.news}
+        event={pageContext.event}
       />
     </Layout>
   );
 };
 
-EventPage.propTypes = {
+NewsPage.propTypes = {
   data: PropTypes.shape({
     markdownRemark: PropTypes.object,
   }),
 };
 
-export default EventPage;
+export default NewsPage;
 
 export const pageQuery = graphql`
-  query EventPageByID($id: String!) {
+  query NewsPageByID($id: String!) {
     markdownRemark(id: { eq: $id }) {
       id
       html
       frontmatter {
         date(formatString: "MMMM DD, YYYY")
         title
-        description
+        event
       }
     }
   }

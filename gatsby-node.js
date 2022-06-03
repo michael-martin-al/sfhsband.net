@@ -12,12 +12,16 @@ exports.createPages = ({ actions, graphql }) => {
         edges {
           node {
             id
+            excerpt
             fields {
               slug
             }
             frontmatter {
-              tags
               templateKey
+              event
+              title
+              date(formatString: "MMMM DD, YYYY")
+              description
             }
           }
         }
@@ -33,39 +37,53 @@ exports.createPages = ({ actions, graphql }) => {
 
     posts.forEach((edge) => {
       const id = edge.node.id
+
+      function findEventBySlug(slug) {
+        const event = posts.find((post) =>
+          post.node.fields.slug === slug
+        )
+        return {
+          slug: event.node.fields.slug,
+          title: event.node.frontmatter.title,
+          date: event.node.frontmatter.date,
+          excerpt: event.node.excerpt,
+        }
+      }
+
+      function findNewsByEventSlug(slug) {
+        return posts.filter(post =>
+          post.node.frontmatter.event === slug
+        ).map(post => ({
+          slug: post.node.fields.slug,
+          title: post.node.frontmatter.title,
+          excerpt: post.node.excerpt,
+          date: post.node.frontmatter.date
+        }))
+      }
+
+      let additionalContext = {}
+
+      if (edge.node.frontmatter.templateKey === 'news-page' && edge.node.frontmatter.event) {
+        additionalContext = {
+          event: findEventBySlug(edge.node.frontmatter.event)
+        }
+      }
+
+      if (edge.node.frontmatter.templateKey === 'event-page') {
+        additionalContext = {
+          news: findNewsByEventSlug(edge.node.fields.slug)
+        }
+      }
+
       createPage({
         path: edge.node.fields.slug,
-        tags: edge.node.frontmatter.tags,
         component: path.resolve(
           `src/templates/${String(edge.node.frontmatter.templateKey)}.js`
         ),
         // additional data can be passed via context
         context: {
           id,
-        },
-      })
-    })
-
-    // Tag pages:
-    let tags = []
-    // Iterate through each post, putting all found tags into `tags`
-    posts.forEach((edge) => {
-      if (_.get(edge, `node.frontmatter.tags`)) {
-        tags = tags.concat(edge.node.frontmatter.tags)
-      }
-    })
-    // Eliminate duplicate tags
-    tags = _.uniq(tags)
-
-    // Make tag pages
-    tags.forEach((tag) => {
-      const tagPath = `/tags/${_.kebabCase(tag)}/`
-
-      createPage({
-        path: tagPath,
-        component: path.resolve(`src/templates/tags.js`),
-        context: {
-          tag,
+          ...additionalContext
         },
       })
     })
@@ -84,4 +102,20 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       value,
     })
   }
+}
+
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions
+  const typeDefs = `
+    type MarkdownRemark implements Node {
+      frontmatter: Frontmatter
+    }
+    type Frontmatter {
+      title: String
+      date: Date @dateformat(formatString: "MMMM DD, YYYY")
+      description: String
+      event: String
+    }
+  `
+  createTypes(typeDefs)
 }
