@@ -42,6 +42,7 @@ exports.createPages = ({ actions, graphql }) => {
         const event = posts.find((post) =>
           post.node.fields.slug === slug
         )
+        if (!event) return {}
         return {
           slug: event.node.fields.slug,
           title: event.node.frontmatter.title,
